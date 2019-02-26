@@ -19,22 +19,23 @@ curl -O https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexa
 - Use `pdflatex --shell-escape example.tex` to compile your `.tex` file.
 
 ### Examples
-#### `\Wolfram{}`
+#### `\wolfram{}`
 
 Input:
 ```tex
-$\Wolfram{Series[Exp[x],{x,0,5}]}$
+$\wolfram{Series[Exp[x],{x,0,5}]}$
 ```
 
 Output:
+
 ![](http://latex.codecogs.com/gif.latex?1+x+\frac{x^2}{2}+\frac{x^3}{6}+\frac{x^4}{24}+\frac{x^5}{120}+O(x^6))
 
-#### `\WolframGraphics{}`
+#### `\wolframgraphics{}`
 
 Input:
 
 ```tex
-\WolframGraphics[pdf]{Plot3D[Sin[x]Cos[y], {x, -2Pi, 2Pi}, {y, -2Pi, Pi}]}{example}
+\wolframgraphics[pdf]{Plot3D[Sin[x]Cos[y], {x, -2Pi, 2Pi}, {y, -2Pi, Pi}]}{example}
 \begin{figure}
   \centering
   \includegraphics{example.pdf}
@@ -42,25 +43,27 @@ Input:
 ```
 
 Output:
+
 ![Example Plot](example.png?raw=true)
 
-#### `\WolframAlpha{}`
+#### `\wolframalpha{}`
 
 Input:
 ```tex
-The population of Shanghai is $\WolframAlpha{population of Shanghai}$, which is $\WolframAlpha{ratio of Shanghai populatioin and NYC population}$ times the population of New York City.
+The population of Shanghai is $\wolframalpha{population of Shanghai}$, which is $\wolframalpha{ratio of Shanghai populatioin and NYC population}$ times the population of New York City.
 ```
 
 Output:
 
 The population of Shanghai is 2.415×10<sup>7</sup> people, which is 2.814 times the population of New York City.
 
-#### `\WolframDSolve{}`
+#### `\wolframdsolve{}`
 
 Input:
 ```tex
-\WolframDSolve{D[y[x],x]+y[x]==a*Sin[x]}{y[x]}{x}
+\wolframdsolve{D[y[x],x]+y[x]==a*Sin[x]}{y[x]}{x}
 ```
 
 Output:
+
 ![](http://latex.codecogs.com/gif.latex?y(x)=\frac{1}{2}a(\sin(x)-\cos(x))+c_1e^{-x})

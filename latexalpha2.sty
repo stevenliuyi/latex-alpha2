@@ -8,40 +8,40 @@
 \ExecuteOptions{local}
 \ProcessOptions\relax
 
-\newcommand{\Clean}{\immediate\write18{rm -f wolfram}}
-\newcommand{\UnknownOption}[2]{\PackageError{latexalpha2}{Unknown option '#2' for #1}{}}
+\newcommand{\cleantempfile}{\immediate\write18{rm -f wolfram}}
+\newcommand{\unknownoption}[2]{\PackageError{latexalpha2}{Unknown option '#2' for #1}{}}
 
-\newcommand{\Wolfram}[2][tex]{
+\newcommand{\wolfram}[2][tex]{
     \def\currformat{#1}
     \def\texformat{tex}
     \def\textformat{text}
     \def\wolframformat{wolfram}
-    \Clean
+    \cleantempfile
     \ifx \currformat \texformat \immediate\write18{wolframscript -code '#2' -format TeXForm > wolfram \platform} \else
     \ifx \currformat \textformat \immediate\write18{wolframscript -code '#2' -format Text > wolfram \platform} \else
     \ifx \currformat \wolframformat \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
     \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
     \fi\fi\fi
 	\input{wolfram}
-    \Clean
+    \cleantempfile
 }
 
-\newcommand{\WolframAlpha}[2][tex]{
+\newcommand{\wolframalpha}[2][tex]{
     \def\currformat{#1}
     \def\textformat{text}
     \def\wolframformat{wolfram}
     \def\texformat{tex}
-    \Clean
+    \cleantempfile
     \ifx \currformat \textformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","ShortAnswer"]' \platform > wolfram} \else
     \ifx \currformat \wolframformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' \platform > wolfram} \else
     \ifx \currformat \texformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' -format TeXForm \platform > wolfram} \else
-    \UnknownOption{wolframAlpha}{#1}
+    \unknownoption{wolframAlpha}{#1}
     \fi\fi\fi
     \input{wolfram}
-    \Clean
+    \cleantempfile
 }
 
-\newcommand{\WolframGraphics}[3][pdf]{
+\newcommand{\wolframgraphics}[3][pdf]{
     \def\currformat{#1}
     \def\pdfformat{pdf}
     \def\pngformat{png}
@@ -49,33 +49,33 @@
     \ifx \currformat \pdfformat \immediate\write18{wolframscript -code '#2' -format PDF \platform > '#3'.pdf} \else
     \ifx \currformat \pngformat \immediate\write18{wolframscript -code '#2' -format PNG \platform > '#3'.png} \else
     \ifx \currformat \jpgformat \immediate\write18{wolframscript -code '#2' -format JPEG \platform > '#3'.jpg} \else
-    \UnknownOption{wolframGraphics}{#1}
+    \unknownoption{wolframGraphics}{#1}
     \fi\fi\fi
 }
 
-\newcommand{\WolframSolve}[2]{
-    \Clean
+\newcommand{\wolframsolve}[2]{
+    \cleantempfile
     \makeatletter
     \immediate\write18{wolframscript -code '"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("&"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"&/@(#2/.Solve[#1, #2]))<>"\@backslashchar\@backslashchar end{flalign*}"' -format Text \platform > wolfram}
     \makeatother
     \input{wolfram}
-    \Clean
+    \cleantempfile
 }
 
-\newcommand{\WolframDSolve}[3]{
-    \Clean
+\newcommand{\wolframdsolve}[3]{
+    \cleantempfile
     \makeatletter
     \immediate\write18{wolframscript -code '"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("&"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"&/@(#2/.DSolve[#1, #2, #3]))<>"\@backslashchar\@backslashchar end{flalign*}"' -format Text \platform > wolfram}
     \makeatother
     \input{wolfram}
-    \Clean
+    \cleantempfile
 }
 
-\newcommand{\WolframMakeLetter}{
+\newcommand{\wolframmakeletter}{
     \catcode`&=12
 }
 
-\newcommand{\WolframMakeDefault}{
+\newcommand{\wolframmakedefault}{
     \catcode`&=4
 }
 
