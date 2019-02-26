@@ -1,0 +1,88 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{latexalpha2}[2019/02/26 LaTeX-Alpha2]
+\RequirePackage{graphicx}
+\RequirePackage{amsmath}
+
+\DeclareOption{local}{\newcommand{\platform}{-local}}
+\DeclareOption{cloud}{\renewcommand{\platform}{-cloud}}
+\ExecuteOptions{local}
+\ProcessOptions\relax
+
+\newcommand{\Clean}{\immediate\write18{rm -f wolfram}}
+\newcommand{\UnknownOption}[2]{\PackageError{latexalpha2}{Unknown option '#2' for #1}{}}
+
+\newcommand{\Wolfram}[2][tex]{
+    \def\format{#1}
+    \def\tex{tex}
+    \def\text{text}
+    \def\wolfram{wolfram}
+    \Clean
+    \ifx \format \tex \immediate\write18{wolframscript -code '#2' -format TeXForm > wolfram \platform} \else
+    \ifx \format \text \immediate\write18{wolframscript -code '#2' -format Text > wolfram \platform} \else
+    \ifx \format \wolfram \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
+    \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
+    \fi\fi\fi
+	\input{wolfram}
+    \Clean
+}
+
+\newcommand{\WolframAlpha}[2][text]{
+    \def\type{#1}
+    \def\text{text}
+    \def\wolfram{wolfram}
+    \def\tex{tex}
+    \Clean
+    \ifx \type \text \immediate\write18{wolframscript -code 'WolframAlpha["#2","ShortAnswer"]' \platform > wolfram} \else
+    \ifx \type \wolfram \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' \platform > wolfram} \else
+    \ifx \type \wolfram \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' -format TeXForm \platform > wolfram} \else
+    \UnknownOption{wolframAlpha}{#1}
+    \fi\fi\fi
+	\input{wolfram}
+    \Clean
+}
+
+\newcommand{\WolframGraphics}[3][pdf]{
+    \def\format{#1}
+    \def\pdf{pdf}
+    \def\png{png}
+    \def\jpg{jpg}
+    \ifx \format \pdf \immediate\write18{wolframscript -code '#2' -format PDF \platform > '#3'.pdf} \else
+    \ifx \format \png \immediate\write18{wolframscript -code '#2' -format PNG \platform > '#3'.png} \else
+    \ifx \format \jpg \immediate\write18{wolframscript -code '#2' -format JPEG \platform > '#3'.jpg} \else
+    \UnknownOption{wolframGraphics}{#1}
+    \fi\fi\fi
+}
+
+\newcommand{\WolframSolve}[2]{
+    \Clean
+    \makeatletter
+    \immediate\write18{wolframscript -code '"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("&"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"&/@(#2/.Solve[#1, #2]))<>"\@backslashchar\@backslashchar end{flalign*}"' -format Text \platform > wolfram}
+    \makeatother
+    \input{wolfram}
+    \Clean
+}
+
+\newcommand{\WolframDSolve}[3]{
+    \Clean
+    \makeatletter
+    \immediate\write18{wolframscript -code '"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("&"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"&/@(#2/.DSolve[#1, #2, #3]))<>"\@backslashchar\@backslashchar end{flalign*}"' -format Text \platform > wolfram}
+    \makeatother
+    \input{wolfram}
+    \Clean
+}
+
+\newcommand{\WolframMakeLetter}{
+    \catcode`&=12
+}
+
+\newcommand{\WolframMakeDefault}{
+    \catcode`&=4
+}
+
+\makeatletter
+\catcode`#=12
+\def\@hashchar{#}
+\catcode`#=6
+\makeatother
+
+\endinput
