@@ -12,43 +12,43 @@
 \newcommand{\UnknownOption}[2]{\PackageError{latexalpha2}{Unknown option '#2' for #1}{}}
 
 \newcommand{\Wolfram}[2][tex]{
-    \def\format{#1}
-    \def\tex{tex}
-    \def\text{text}
-    \def\wolfram{wolfram}
+    \def\currformat{#1}
+    \def\texformat{tex}
+    \def\textformat{text}
+    \def\wolframformat{wolfram}
     \Clean
-    \ifx \format \tex \immediate\write18{wolframscript -code '#2' -format TeXForm > wolfram \platform} \else
-    \ifx \format \text \immediate\write18{wolframscript -code '#2' -format Text > wolfram \platform} \else
-    \ifx \format \wolfram \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
+    \ifx \currformat \texformat \immediate\write18{wolframscript -code '#2' -format TeXForm > wolfram \platform} \else
+    \ifx \currformat \textformat \immediate\write18{wolframscript -code '#2' -format Text > wolfram \platform} \else
+    \ifx \currformat \wolframformat \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
     \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
     \fi\fi\fi
 	\input{wolfram}
     \Clean
 }
 
-\newcommand{\WolframAlpha}[2][text]{
-    \def\type{#1}
-    \def\text{text}
-    \def\wolfram{wolfram}
-    \def\tex{tex}
+\newcommand{\WolframAlpha}[2][tex]{
+    \def\currformat{#1}
+    \def\textformat{text}
+    \def\wolframformat{wolfram}
+    \def\texformat{tex}
     \Clean
-    \ifx \type \text \immediate\write18{wolframscript -code 'WolframAlpha["#2","ShortAnswer"]' \platform > wolfram} \else
-    \ifx \type \wolfram \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' \platform > wolfram} \else
-    \ifx \type \wolfram \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' -format TeXForm \platform > wolfram} \else
+    \ifx \currformat \textformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","ShortAnswer"]' \platform > wolfram} \else
+    \ifx \currformat \wolframformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' \platform > wolfram} \else
+    \ifx \currformat \texformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' -format TeXForm \platform > wolfram} \else
     \UnknownOption{wolframAlpha}{#1}
     \fi\fi\fi
-	\input{wolfram}
+    \input{wolfram}
     \Clean
 }
 
 \newcommand{\WolframGraphics}[3][pdf]{
-    \def\format{#1}
-    \def\pdf{pdf}
-    \def\png{png}
-    \def\jpg{jpg}
-    \ifx \format \pdf \immediate\write18{wolframscript -code '#2' -format PDF \platform > '#3'.pdf} \else
-    \ifx \format \png \immediate\write18{wolframscript -code '#2' -format PNG \platform > '#3'.png} \else
-    \ifx \format \jpg \immediate\write18{wolframscript -code '#2' -format JPEG \platform > '#3'.jpg} \else
+    \def\currformat{#1}
+    \def\pdfformat{pdf}
+    \def\pngformat{png}
+    \def\jpgformat{jpg}
+    \ifx \currformat \pdfformat \immediate\write18{wolframscript -code '#2' -format PDF \platform > '#3'.pdf} \else
+    \ifx \currformat \pngformat \immediate\write18{wolframscript -code '#2' -format PNG \platform > '#3'.png} \else
+    \ifx \currformat \jpgformat \immediate\write18{wolframscript -code '#2' -format JPEG \platform > '#3'.jpg} \else
     \UnknownOption{wolframGraphics}{#1}
     \fi\fi\fi
 }
