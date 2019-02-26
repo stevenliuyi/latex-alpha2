@@ -2,11 +2,13 @@
 
 LaTeX-α<sup>2</sup> is a LaTeX package that can execute Wolfram Language codes and show the corresponding results inside LaTeX documents.
 
-The package is heavily inspired by [LaTeX-Alpha](https://github.com/Akollek/LaTeX-Alpha). Unfortunately, LaTeX-Alpha has been down for a while. The aim of this package is to replace LaTeX-Alpha, as well as to add various new features.
+The package is heavily inspired by [LaTeX-Alpha](https://github.com/Akollek/LaTeX-Alpha). Unfortunately, LaTeX-Alpha has been down for a while. The aim of this package is to replace LaTeX-Alpha, as well as to provide various new features.
 
 The codes can be executed either locally (via locally installed Mathematica) or on the cloud (via [Wolfram Cloud](https://www.wolframcloud.com/)) using the [WolframScript](https://www.wolfram.com/wolframscript/) interpreter.
 
 ### Usage
+
+- First install [WolframScript](https://www.wolfram.com/wolframscript/) if you haven't already done so. You can use `type wolframscript` to check if it's properly installed.
 
 - Download `latexalpha2.sty` to the same folder as your `.tex` file:
 
@@ -16,7 +18,9 @@ curl -O https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexa
 
 - Add `\usepackage{latexalpha2}` to the preamble of your document. All the codes will be run locally by default. If you'd like to run on the cloud, use `\usepackage[cloud]{latexalpha2}` instead.
 
-- Use `pdflatex --shell-escape example.tex` to compile your `.tex` file.
+- LaTeX must be invoked with the `--shell-escape` flag. For example:
+
+```pdflatex --shell-escape example.tex```
 
 ### Examples
 #### `\wolfram{}`
@@ -67,3 +71,7 @@ Input:
 Output:
 
 ![](http://latex.codecogs.com/gif.latex?y(x)=\frac{1}{2}a(\sin(x)-\cos(x))+c_1e^{-x})
+
+### License
+
+This work is distributed under the LaTeX Project Public License (LLPL), version 1.3c.
