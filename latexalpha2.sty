@@ -21,6 +21,7 @@
   \catcode`&=12
   \gdef\@hashchar{#}
   \gdef\@ampchar{&}
+  \gdef\backslash{\@backslashchar}
   \makeatother
 \endgroup
 
@@ -79,7 +80,7 @@
   \def\la@wolframformat{wolfram}%
   \def\la@texformat{tex}%
   \la@cleancodetempfile%
-  \la@writecodefile{WolframAlpha["#2","\ifx\la@currformat\la@textformat ShortAnswer\else WolframResult\fi"]}{#1}%
+  \la@writecodefile{WolframAlpha["#2","\ifx\la@currformat\la@textformat ShortAnswer\else Result\fi"]}{#1}%
   \ifx \la@currformat \la@textformat \la@executewolfram{} \else
   \ifx \la@currformat \la@wolframformat \la@executewolfram{} \else
   \ifx \la@currformat \la@texformat \la@executewolfram{TeXForm} \else

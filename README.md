@@ -37,16 +37,32 @@ Output:
 Input:
 
 ```tex
-\begin{figure}
-  \wolframgraphics[pdf]{Plot3D[Sin[x]Cos[y], {x, -2Pi, 2Pi}, {y, -2Pi, Pi}]}{example}
-  \includegraphics{example.pdf}
-  \centering
+\begin{figure} 
+    \wolframgraphics[pdf]{Plot3D[Sin[x]Cos[y], {x, -2Pi, 3Pi}, {y, -2Pi, Pi}]}{example}
+    \includegraphics{example.pdf}
+    \caption{Plot of $f(x,y)=\sin(x)\cos(y)$}
+    \centering
 \end{figure}
 ```
 
 Output:
 
 ![Example Plot](example.png?raw=true)
+
+Input:
+
+```tex
+\begin{figure} 
+    \wolframgraphics[pdf]{GeoGraphics[{Red,Thick,GeoPath["DateLine"]},GeoRange->{All, {90, 270}},GeoGridLines->Quantity[15, "AngularDegrees"]]}{example2}
+    \includegraphics{example2.pdf}
+    \caption{International Date Line}
+    \centering
+\end{figure}
+```
+
+Output:
+
+![Example Plot 2](example2.png?raw=true)
 
 #### `\wolframalpha{}`
 
@@ -58,6 +74,15 @@ The population of Shanghai is $\wolframalpha{population of Shanghai}$, which is 
 Output:
 
 The population of Shanghai is 2.415×10<sup>7</sup> people, which is 2.814 times the population of New York City.
+
+Input:
+```tex
+$\wolframalpha{Compton scattering for electron}$
+```
+
+Output:
+
+![](http://latex.codecogs.com/gif.latex?\Delta\lambda=(1-\cos(\theta))\left(0.0019569512\text{h}\\,\text{c}/\text{keV}\right))
 
 #### `\wolframdsolve{}`
 
