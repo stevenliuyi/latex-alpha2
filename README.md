@@ -39,10 +39,10 @@ Output:
 Input:
 
 ```tex
-\wolframgraphics[pdf]{Plot3D[Sin[x]Cos[y], {x, -2Pi, 2Pi}, {y, -2Pi, Pi}]}{example}
 \begin{figure}
-  \centering
+  \wolframgraphics[pdf]{Plot3D[Sin[x]Cos[y], {x, -2Pi, 2Pi}, {y, -2Pi, Pi}]}{example}
   \includegraphics{example.pdf}
+  \centering
 \end{figure}
 ```
 

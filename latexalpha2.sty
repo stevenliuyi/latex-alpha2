@@ -2,28 +2,54 @@
 \ProvidesPackage{latexalpha2}[2019/02/26 LaTeX-Alpha2]
 \RequirePackage{graphicx}
 \RequirePackage{amsmath}
+\RequirePackage{etoolbox}
 
 \DeclareOption{local}{\newcommand{\platform}{-local}}
 \DeclareOption{cloud}{\renewcommand{\platform}{-cloud}}
 \ExecuteOptions{local}
 \ProcessOptions\relax
 
-\newcommand{\cleantempfile}{\immediate\write18{rm -f wolfram}}
+\begingroup
+    \makeatletter
+    \catcode`#=12
+    \catcode`&=12
+    \gdef\@hashchar{#}
+    \gdef\@ampchar{&}
+    \makeatother
+\endgroup
+
+\def\codetempfile{wolfram_code.tmp}
+\def\resulttempfile{wolfram_result.tmp}
+
+\newcommand{\cleantempfiles}{\immediate\write18{rm -f wolfram_*.tmp}}
 \newcommand{\unknownoption}[2]{\PackageError{latexalpha2}{Unknown option '#2' for #1}{}}
+
+\newcommand{\executewolfram}[2]{
+    \def\resultfilename{\ifblank{#2}{\resulttempfile}{#2}}
+    \immediate\write18{wolframscript -file wolfram_code.tmp -print \ifblank{#1}{}{-format #1} \platform > \resultfilename}
+}
+
+\newcommand{\writetempfile}[1]{
+    \newwrite\tempfile
+    \immediate\openout\tempfile=\codetempfile
+    \immediate\write\tempfile{#1}
+    \immediate\closeout\tempfile
+}
 
 \newcommand{\wolfram}[2][tex]{
     \def\currformat{#1}
     \def\texformat{tex}
     \def\textformat{text}
     \def\wolframformat{wolfram}
-    \cleantempfile
-    \ifx \currformat \texformat \immediate\write18{wolframscript -code '#2' -format TeXForm > wolfram \platform} \else
-    \ifx \currformat \textformat \immediate\write18{wolframscript -code '#2' -format Text > wolfram \platform} \else
-    \ifx \currformat \wolframformat \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
-    \immediate\write18{wolframscript -code '#2' > wolfram \platform} \else
+    \cleantempfiles
+    \writetempfile{#2}
+    \ifx \currformat \texformat \executewolfram{TeXForm}{} \else
+    \ifx \currformat \textformat \executewolfram{Text}{} \else
+    \ifx \currformat \wolframformat \executewolfram{}{} \else
+    \unknownoption{wolfram}{#1}
     \fi\fi\fi
-	\input{wolfram}
-    \cleantempfile
+    \input{\resulttempfile}
+    \cleantempfiles
 }
 
 \newcommand{\wolframalpha}[2][tex]{
@@ -31,14 +57,15 @@
     \def\textformat{text}
     \def\wolframformat{wolfram}
     \def\texformat{tex}
-    \cleantempfile
-    \ifx \currformat \textformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","ShortAnswer"]' \platform > wolfram} \else
-    \ifx \currformat \wolframformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' \platform > wolfram} \else
-    \ifx \currformat \texformat \immediate\write18{wolframscript -code 'WolframAlpha["#2","WolframResult"]' -format TeXForm \platform > wolfram} \else
-    \unknownoption{wolframAlpha}{#1}
+    \cleantempfiles
+    \writetempfile{WolframAlpha["#2","\ifx\currformat\textformat ShortAnswer\else WolframResult\fi"]}
+    \ifx \currformat \textformat \executewolfram{}{} \else
+    \ifx \currformat \wolframformat \executewolfram{}{} \else
+    \ifx \currformat \texformat \executewolfram{TeXForm}{} \else
+    \unknownoption{wolframalpha}{#1}
     \fi\fi\fi
-    \input{wolfram}
-    \cleantempfile
+    \input{\resulttempfile}
+    \cleantempfiles
 }
 
 \newcommand{\wolframgraphics}[3][pdf]{
@@ -46,43 +73,33 @@
     \def\pdfformat{pdf}
     \def\pngformat{png}
     \def\jpgformat{jpg}
-    \ifx \currformat \pdfformat \immediate\write18{wolframscript -code '#2' -format PDF \platform > '#3'.pdf} \else
-    \ifx \currformat \pngformat \immediate\write18{wolframscript -code '#2' -format PNG \platform > '#3'.png} \else
-    \ifx \currformat \jpgformat \immediate\write18{wolframscript -code '#2' -format JPEG \platform > '#3'.jpg} \else
-    \unknownoption{wolframGraphics}{#1}
+    \cleantempfiles
+    \writetempfile{#2}
+    \ifx \currformat \pdfformat \executewolfram{PDF}{#3.pdf} \else
+    \ifx \currformat \pngformat \executewolfram{PNG}{#3.png} \else
+    \ifx \currformat \jpgformat \executewolfram{JPEG}{#3.jpg} \else
+    \unknownoption{wolframgraphics}{#1}
     \fi\fi\fi
 }
 
 \newcommand{\wolframsolve}[2]{
-    \cleantempfile
+    \cleantempfiles
     \makeatletter
-    \immediate\write18{wolframscript -code '"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("&"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"&/@(#2/.Solve[#1, #2]))<>"\@backslashchar\@backslashchar end{flalign*}"' -format Text \platform > wolfram}
+    \writetempfile{"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("\@ampchar"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"\@ampchar/@(#2/.Solve[#1, #2]))<>"\@backslashchar\@backslashchar end{flalign*}"}
     \makeatother
-    \input{wolfram}
-    \cleantempfile
+    \executewolfram{Text}{}
+    \input{\resulttempfile}
+    \cleantempfiles
 }
 
 \newcommand{\wolframdsolve}[3]{
-    \cleantempfile
+    \cleantempfiles
     \makeatletter
-    \immediate\write18{wolframscript -code '"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("&"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"&/@(#2/.DSolve[#1, #2, #3]))<>"\@backslashchar\@backslashchar end{flalign*}"' -format Text \platform > wolfram}
+    \writetempfile{"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("\@ampchar"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"\@ampchar/@(#2/.DSolve[#1, #2, #3]))<>"\@backslashchar\@backslashchar end{flalign*}"}
     \makeatother
-    \input{wolfram}
-    \cleantempfile
+    \executewolfram{Text}{}
+    \input{\resulttempfile}
+    \cleantempfiles
 }
-
-\newcommand{\wolframmakeletter}{
-    \catcode`&=12
-}
-
-\newcommand{\wolframmakedefault}{
-    \catcode`&=4
-}
-
-\makeatletter
-\catcode`#=12
-\def\@hashchar{#}
-\catcode`#=6
-\makeatother
 
 \endinput
