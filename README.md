@@ -18,9 +18,7 @@ curl -O https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexa
 
 - Add `\usepackage{latexalpha2}` to the preamble of your document. All the codes will be run locally by default. If you'd like to run on the cloud, use `\usepackage[cloud]{latexalpha2}` instead.
 
-- LaTeX must be invoked with the `--shell-escape` flag. For example:
-
-```pdflatex --shell-escape example.tex```
+- LaTeX must be invoked with the `-shell-escape` flag in order to run WolframScript. For example: ```pdflatex -shell-escape example.tex```.
 
 ### Examples
 #### `\wolfram{}`
@@ -65,7 +63,7 @@ The population of Shanghai is 2.415×10<sup>7</sup> people, which is 2.814 times
 
 Input:
 ```tex
-\wolframdsolve{D[y[x],x]+y[x]==a*Sin[x]}{y[x]}{x}
+\wolframdsolve{y'[x]+y[x]==a*Sin[x]}{y[x]}{x}
 ```
 
 Output:
