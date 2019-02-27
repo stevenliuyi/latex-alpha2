@@ -3,10 +3,16 @@
 \RequirePackage{graphicx}
 \RequirePackage{amsmath}
 \RequirePackage{etoolbox}
+\RequirePackage{pdftexcmds}
 
-\DeclareOption{local}{\newcommand{\platform}{-local}}
-\DeclareOption{cloud}{\renewcommand{\platform}{-cloud}}
-\ExecuteOptions{local}
+\newbool{cacheresults}
+
+\DeclareOption{local}{\gdef\platform{-local}}
+\DeclareOption{cloud}{\gdef\platform{-cloud}}
+\DeclareOption{cache}{\booltrue{cacheresults}}
+\DeclareOption{nocache}{\boolfalse{cacheresults}}
+
+\ExecuteOptions{local,cache}
 \ProcessOptions\relax
 
 \begingroup
@@ -19,17 +25,32 @@
 \endgroup
 
 \def\codetempfile{wolfram_code.tmp}
-\def\resulttempfile{wolfram_result.tmp}
+\def\resulttempfile{}
+\def\currcodehash{}
 
-\newcommand{\cleantempfiles}{\immediate\write18{rm -f wolfram_*.tmp}}
+\newcommand{\cleancodetempfile}{\immediate\write18{rm -f \codetempfile}}
 \newcommand{\unknownoption}[2]{\PackageError{latexalpha2}{Unknown option '#2' for #1}{}}
 
-\newcommand{\executewolfram}[2]{
-    \def\resultfilename{\ifblank{#2}{\resulttempfile}{#2}}
-    \immediate\write18{wolframscript -file wolfram_code.tmp -print \ifblank{#1}{}{-format #1} \platform > \resultfilename}
+\newcommand{\executewolfram}[1]{
+    \IfFileExists{\resulttempfile}{
+        \ifbool{cacheresults}{\message{Using the existed output file \resulttempfile}}{\executewolframcore{#1}}
+    }{
+        \executewolframcore{#1}
+    }
 }
 
-\newcommand{\writetempfile}[1]{
+\newcommand{\executewolframcore}[1]{
+    \def\wolframscript{wolframscript -file wolfram_code.tmp -print \ifblank{#1}{}{-format #1} \platform > \resulttempfile}
+    \message{\wolframscript}
+    \immediate\write18{\wolframscript}
+}
+
+\newcommand{\writecodefile}[2]{
+    \message{--------------------------------}
+    \message{Processing latexalpha2 input: #1}
+    \message{Option: #2}
+    \gdef\currcodehash{\pdfmdfivesum{#1#2}}
+    \gdef\resulttempfile{latexalpha2_\currcodehash.out}
     \newwrite\tempfile
     \immediate\openout\tempfile=\codetempfile
     \immediate\write\tempfile{#1}
@@ -41,15 +62,15 @@
     \def\texformat{tex}
     \def\textformat{text}
     \def\wolframformat{wolfram}
-    \cleantempfiles
-    \writetempfile{#2}
-    \ifx \currformat \texformat \executewolfram{TeXForm}{} \else
-    \ifx \currformat \textformat \executewolfram{Text}{} \else
-    \ifx \currformat \wolframformat \executewolfram{}{} \else
+    \cleancodetempfile
+    \writecodefile{#2}{#1}
+    \ifx \currformat \texformat \executewolfram{TeXForm} \else
+    \ifx \currformat \textformat \executewolfram{Text} \else
+    \ifx \currformat \wolframformat \executewolfram{} \else
     \unknownoption{wolfram}{#1}
     \fi\fi\fi
     \input{\resulttempfile}
-    \cleantempfiles
+    \cleancodetempfile
 }
 
 \newcommand{\wolframalpha}[2][tex]{
@@ -57,15 +78,15 @@
     \def\textformat{text}
     \def\wolframformat{wolfram}
     \def\texformat{tex}
-    \cleantempfiles
-    \writetempfile{WolframAlpha["#2","\ifx\currformat\textformat ShortAnswer\else WolframResult\fi"]}
-    \ifx \currformat \textformat \executewolfram{}{} \else
-    \ifx \currformat \wolframformat \executewolfram{}{} \else
-    \ifx \currformat \texformat \executewolfram{TeXForm}{} \else
+    \cleancodetempfile
+    \writecodefile{WolframAlpha["#2","\ifx\currformat\textformat ShortAnswer\else WolframResult\fi"]}{#1}
+    \ifx \currformat \textformat \executewolfram{} \else
+    \ifx \currformat \wolframformat \executewolfram{} \else
+    \ifx \currformat \texformat \executewolfram{TeXForm} \else
     \unknownoption{wolframalpha}{#1}
     \fi\fi\fi
     \input{\resulttempfile}
-    \cleantempfiles
+    \cleancodetempfile
 }
 
 \newcommand{\wolframgraphics}[3][pdf]{
@@ -73,33 +94,43 @@
     \def\pdfformat{pdf}
     \def\pngformat{png}
     \def\jpgformat{jpg}
-    \cleantempfiles
-    \writetempfile{#2}
-    \ifx \currformat \pdfformat \executewolfram{PDF}{#3.pdf} \else
-    \ifx \currformat \pngformat \executewolfram{PNG}{#3.png} \else
-    \ifx \currformat \jpgformat \executewolfram{JPEG}{#3.jpg} \else
+    \cleancodetempfile
+    \writecodefile{#2}{#1}
+    \ifx \currformat \pdfformat \executewolfram{PDF} \else
+    \ifx \currformat \pngformat \executewolfram{PNG} \else
+    \ifx \currformat \jpgformat \executewolfram{JPEG} \else
+    \unknownoption{wolframgraphics}{#1}
+    \fi\fi\fi
+    \message{\resulttempfile}
+    \ifx \currformat \pdfformat \immediate\write18{cp\space\resulttempfile\space#3.pdf} \else
+    \ifx \currformat \pngformat \immediate\write18{cp\space\resulttempfile\space#3.png} \else
+    \ifx \currformat \jpgformat \immediate\write18{cp\space\resulttempfile\space#3.jpg} \else
     \unknownoption{wolframgraphics}{#1}
     \fi\fi\fi
 }
 
 \newcommand{\wolframsolve}[2]{
-    \cleantempfiles
+    \cleancodetempfile
     \makeatletter
-    \writetempfile{"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("\@ampchar"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"\@ampchar/@(#2/.Solve[#1, #2]))<>"\@backslashchar\@backslashchar end{flalign*}"}
+    \writecodefile{"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("\@ampchar"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"\@ampchar/@(#2/.Solve[#1, #2]))<>"\@backslashchar\@backslashchar end{flalign*}"}{#1}
     \makeatother
-    \executewolfram{Text}{}
+    \executewolfram{Text}
     \input{\resulttempfile}
-    \cleantempfiles
+    \cleancodetempfile
 }
 
 \newcommand{\wolframdsolve}[3]{
-    \cleantempfiles
+    \cleancodetempfile
     \makeatletter
-    \writetempfile{"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("\@ampchar"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"\@ampchar/@(#2/.DSolve[#1, #2, #3]))<>"\@backslashchar\@backslashchar end{flalign*}"}
+    \writecodefile{"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("\@ampchar"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"\@ampchar/@(#2/.DSolve[#1, #2, #3]))<>"\@backslashchar\@backslashchar end{flalign*}"}{#1}
     \makeatother
-    \executewolfram{Text}{}
+    \executewolfram{Text}
     \input{\resulttempfile}
-    \cleantempfiles
+    \cleancodetempfile
+}
+
+\AtEndDocument{
+    \ifbool{cacheresults}{}{\immediate\write18{rm -f latexalpha2_*.out}}
 }
 
 \endinput
