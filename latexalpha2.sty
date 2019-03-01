@@ -50,7 +50,7 @@
   \message{wolfram code: #1^^J}%
   \ifblank{#2}{}{\message{option: #2}}
   \gdef\la@currcodehash{\pdfmdfivesum{#1#2}}%
-  \gdef\la@resulttempfile{latexalpha2_\la@currcodehash.out}%
+  \gdef\la@resulttempfile{.latexalpha2_\la@currcodehash.out}%
   \newwrite\tempfile%
   \immediate\openout\tempfile=\la@codetempfile%
   \immediate\write\tempfile{#1}%
@@ -93,7 +93,7 @@
   \ifx \la@currformat \la@wolframtwoformat \la@executewolfram{} \else
   \ifx \la@currformat \la@texformat \la@executewolfram{TeXForm} \else
   \la@unknownoption{wolframalpha}{#1}
-  \fi\fi\fi
+  \fi\fi\fi\fi
   \input{\la@resulttempfile}%
   \la@cleancodetempfile%
 }
@@ -160,7 +160,7 @@
 }
 
 \AtEndDocument{%
-  \ifbool{ifcache}{}{\immediate\write18{rm -f latexalpha2_*.out}}
+  \ifbool{ifcache}{}{\immediate\write18{rm -f .latexalpha2_*.out}}
 }
 
 \endinput
