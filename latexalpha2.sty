@@ -4,6 +4,7 @@
 \RequirePackage{amsmath}
 \RequirePackage{etoolbox}
 \RequirePackage{pdftexcmds}
+\RequirePackage{morewrites}
 
 \newbool{ifcache}
 
@@ -107,7 +108,6 @@
   \ifx \la@currformat \la@jpgformat \la@executewolfram{JPEG} \else
   \la@unknownoption{wolframgraphics}{#1}
   \fi\fi\fi
-  \message{\la@resulttempfile}%
   \ifx \la@currformat \la@pdfformat \immediate\write18{cp\space\la@resulttempfile\space#3.pdf} \else
   \ifx \la@currformat \la@pngformat \immediate\write18{cp\space\la@resulttempfile\space#3.png} \else
   \ifx \la@currformat \la@jpgformat \immediate\write18{cp\space\resulttempfile\space#3.jpg} \else
@@ -134,7 +134,7 @@
 }
 
 % [<format>]{<code>}
-\newcommand{\wolframtex}[2][tex]{
+\newcommand{\wolframtex}[2][tex]{%
   \def\la@currformat{#1}%
   \la@cleancodetempfile%
   \la@writecodefile{ToExpression["\unexpanded{#2}", TeXForm]}{#1}%
@@ -148,8 +148,19 @@
   \la@cleancodetempfile%
 }
 
+% [<format>]{<code>}{<filename>}
+\newcommand{\wolframanimation}[2]{%
+  \la@cleancodetempfile%
+  \la@writecodefile{#1}{}%
+  \la@executewolfram{GIF} 
+  \immediate\write18{cp\space\la@resulttempfile\space#2.gif}%
+  \immediate\write18{mkdir -p #2}%
+  \immediate\write18{convert -coalesce #2.gif #2/frame.png}%
+  \la@cleancodetempfile%
+}
+
 \AtEndDocument{%
-    \ifbool{ifcache}{}{\immediate\write18{rm -f latexalpha2_*.out}}
+  \ifbool{ifcache}{}{\immediate\write18{rm -f latexalpha2_*.out}}
 }
 
 \endinput
