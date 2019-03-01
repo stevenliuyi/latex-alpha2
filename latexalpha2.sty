@@ -159,6 +159,26 @@
   \la@cleancodetempfile%
 }
 
+\AtBeginDocument{%
+  % check if shell-escape is available
+  \ifcase\pdf@shellescape
+  \PackageError{latexalpha2}{Shell escape is not enabled, which is required to use latexalpha2}{}\or
+  \PackageInfo{latexalpha2}{Shell escape is successfully enabled}{}\or
+  \PackageError{latexalpha2}{Shell escape is not enabled, which is required to use latexalpha2}{}\fi
+
+  % check if wolframscript is available
+  \immediate\write18{command -v wolframscript; echo $? > latexalpha2_check.tmp}%
+  \newread\wsreturncodefile%
+  \immediate\openin\wsreturncodefile=latexalpha2_check.tmp%
+  \readline\wsreturncodefile to \wsreturncode%
+  \immediate\closein\wsreturncodefile%
+  % https://tex.stackexchange.com/a/26873
+  \def\instring#1#2{TT\fi\begingroup\edef\x{\endgroup\noexpand\in@{#1}{#2}}\x\ifin@}%
+  \if\instring{0}{\wsreturncode}
+  \PackageInfo{latexalpha2}{WolframScript is available}{}\else
+  \PackageError{latexalpha2}{WolframScript cannot be found, which is required to use latexalpha2}{}\fi
+}
+
 \AtEndDocument{%
   \ifbool{ifcache}{}{\immediate\write18{rm -f .latexalpha2_*.out}}
 }
