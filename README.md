@@ -38,7 +38,7 @@ Input:
 
 ```tex
 \begin{figure} 
-    \wolframgraphics[pdf]{Plot3D[Sin[x]Cos[y], {x, -2Pi, 3Pi}, {y, -2Pi, Pi}]}{example}
+    \wolframgraphics[pdf]{Plot3D[Sin[x]Cos[y], {x, -2Pi, 2Pi}, {y, -2Pi, 2Pi}]}{example}
     \includegraphics{example.pdf}
     \caption{Plot of $f(x,y)=\sin(x)\cos(y)$}
     \centering
