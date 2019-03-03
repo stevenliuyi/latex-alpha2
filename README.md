@@ -1,6 +1,6 @@
 ## LaTeX-α<sup>2</sup>
 
-![CTAN](https://img.shields.io/ctan/v/latexalpha2.svg)
+[![CTAN](https://img.shields.io/ctan/v/latexalpha2.svg)](https://ctan.org/pkg/latexalpha2)
 
 LaTeX-α<sup>2</sup> is a LaTeX package that can execute Wolfram Language codes and show the corresponding results inside LaTeX documents.
 
