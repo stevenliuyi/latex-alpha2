@@ -32,6 +32,7 @@
 \usepackage{etoolbox}
 \usepackage{url}
 \usepackage{spverbatim}
+\usepackage{metalogo}
 \makeatletter
 \preto{\@verbatim}{\topsep=0pt \partopsep=0pt \vspace{10pt}}
 \makeatother
@@ -78,7 +79,7 @@
 %   wolframscript -authenticate
 % \end{verbatim}
 %
-% When compiling your document, \LaTeX~must be invoked with the \texttt{-shell-escape} flag in order to run WolframScript. Currently, this package is only tested with pdf\LaTeX. After put \texttt{\backslash usepackage\string{latexalpha2\string}} in the preamable of your document, you can compile it as:
+% When compiling your document, \LaTeX~must be invoked with the \texttt{-shell-escape} flag in order to run WolframScript. Currently, this package is only tested with pdf\LaTeX~and~\XeLaTeX. After putting \texttt{\backslash usepackage\string{latexalpha2\string}} in the preamable of your document, you can compile it as:
 %
 % \begin{verbatim}
 %   pdflatex -shell-escape filename.tex
@@ -174,6 +175,7 @@
 \RequirePackage{etoolbox}
 \RequirePackage{pdftexcmds}
 \RequirePackage{morewrites}
+\RequirePackage{ifxetex}
 
 \newbool{ifcache}
 
@@ -218,7 +220,7 @@
   \message{------------ latexalpha2 -------------^^J}%
   \message{wolfram code: #1^^J}%
   \ifblank{#2}{}{\message{option: #2}}
-  \gdef\la@currcodehash{\pdfmdfivesum{#1#2}}%
+  \gdef\la@currcodehash{\ifxetex\mdfivesum{#1#2}\else\pdfmdfivesum{#1#2}\fi}%
   \gdef\la@resulttempfile{.latexalpha2_\la@currcodehash.out}%
   \newwrite\tempfile%
   \immediate\openout\tempfile=\la@codetempfile%

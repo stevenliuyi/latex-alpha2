@@ -28,6 +28,7 @@
 \RequirePackage{etoolbox}
 \RequirePackage{pdftexcmds}
 \RequirePackage{morewrites}
+\RequirePackage{ifxetex}
 
 \newbool{ifcache}
 
@@ -72,7 +73,7 @@
   \message{------------ latexalpha2 -------------^^J}%
   \message{wolfram code: #1^^J}%
   \ifblank{#2}{}{\message{option: #2}}
-  \gdef\la@currcodehash{\pdfmdfivesum{#1#2}}%
+  \gdef\la@currcodehash{\ifxetex\mdfivesum{#1#2}\else\pdfmdfivesum{#1#2}\fi}%
   \gdef\la@resulttempfile{.latexalpha2_\la@currcodehash.out}%
   \newwrite\tempfile%
   \immediate\openout\tempfile=\la@codetempfile%
