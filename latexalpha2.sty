@@ -1,5 +1,28 @@
+%%
+%% This is file `latexalpha2.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% latexalpha2.dtx  (with options: `package')
+%% 
+%% This is a generated file.
+%% 
+%% Copyright (C) 2019 by Yi Liu <me@yliu.io>
+%% 
+%% This file may be distributed and/or modified under the conditions of
+%% the LaTeX Project Public License, either version 1.3c of this license
+%% or (at your option) any later version. The latest version of this
+%% license is in:
+%% 
+%%    http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2006/05/20 or later.
+%% 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{latexalpha2}[2019/02/26 LaTeX-Alpha2]
+\ProvidesPackage{latexalpha2}
+  [2019/03/02 v1.0 latexalpha2]
 \RequirePackage{graphicx}
 \RequirePackage{amsmath}
 \RequirePackage{etoolbox}
@@ -65,7 +88,6 @@
 \def\la@pngformat{png}
 \def\la@jpgformat{jpg}
 
-% [<format>]{<code>}
 \newcommand{\wolfram}[2][tex]{%
   \def\la@currformat{#1}%
   \la@cleancodetempfile%
@@ -79,7 +101,6 @@
   \la@cleancodetempfile%
 }
 
-% [<format>]{<code>}
 \newcommand{\wolframalpha}[2][tex]{%
   \def\la@currformat{#1}%
   \la@cleancodetempfile%
@@ -98,7 +119,6 @@
   \la@cleancodetempfile%
 }
 
-% [<format>]{<code>}{<filename>}
 \newcommand{\wolframgraphics}[3][pdf]{%
   \def\la@currformat{#1}%
   \la@cleancodetempfile%
@@ -115,7 +135,6 @@
   \fi\fi\fi
 }
 
-% {<equation>}{<variable>}
 \newcommand{\wolframsolve}[2]{%
   \la@cleancodetempfile%
   \la@writecodefile{"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("\@ampchar"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"\@ampchar/@(#2/.Solve[#1, #2]))<>"\@backslashchar\@backslashchar end{flalign*}"}{}%
@@ -124,7 +143,6 @@
   \la@cleancodetempfile%
 }
 
-% {<equation>}{<dependent variable>}{<independent variable>}
 \newcommand{\wolframdsolve}[3]{%
   \la@cleancodetempfile%
   \la@writecodefile{"\@backslashchar\@backslashchar begin{flalign*}"<>StringJoin@@("\@ampchar"<>ToString[ToExpression["TeXForm"][#2]]<>"="<>ToString[ToExpression["TeXForm"][\@hashchar]]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar"\@ampchar/@(#2/.DSolve[#1, #2, #3]))<>"\@backslashchar\@backslashchar end{flalign*}"}{}%
@@ -133,7 +151,6 @@
   \la@cleancodetempfile%
 }
 
-% [<format>]{<code>}
 \newcommand{\wolframtex}[2][tex]{%
   \def\la@currformat{#1}%
   \la@cleancodetempfile%
@@ -148,11 +165,10 @@
   \la@cleancodetempfile%
 }
 
-% [<format>]{<code>}{<filename>}
 \newcommand{\wolframanimation}[2]{%
   \la@cleancodetempfile%
   \la@writecodefile{#1}{}%
-  \la@executewolfram{GIF} 
+  \la@executewolfram{GIF}
   \immediate\write18{cp\space\la@resulttempfile\space#2.gif}%
   \immediate\write18{mkdir -p #2}%
   \immediate\write18{convert -coalesce #2.gif #2/frame.png}%
@@ -160,19 +176,19 @@
 }
 
 \AtBeginDocument{%
-  % check if shell-escape is available
+  %^^A heck if shell-escape is available
   \ifcase\pdf@shellescape
   \PackageError{latexalpha2}{Shell escape is not enabled, which is required to use latexalpha2}{}\or
   \PackageInfo{latexalpha2}{Shell escape is successfully enabled}{}\or
   \PackageError{latexalpha2}{Shell escape is not enabled, which is required to use latexalpha2}{}\fi
 
-  % check if wolframscript is available
+  %^^A check if wolframscript is available
   \immediate\write18{command -v wolframscript; echo $? > latexalpha2_check.tmp}%
   \newread\wsreturncodefile%
   \immediate\openin\wsreturncodefile=latexalpha2_check.tmp%
   \readline\wsreturncodefile to \wsreturncode%
   \immediate\closein\wsreturncodefile%
-  % https://tex.stackexchange.com/a/26873
+  %^^A https://tex.stackexchange.com/a/26873
   \def\instring#1#2{TT\fi\begingroup\edef\x{\endgroup\noexpand\in@{#1}{#2}}\x\ifin@}%
   \if\instring{0}{\wsreturncode}
   \PackageInfo{latexalpha2}{WolframScript is available}{}\else
@@ -182,5 +198,6 @@
 \AtEndDocument{%
   \ifbool{ifcache}{}{\immediate\write18{rm -f .latexalpha2_*.out}}
 }
-
 \endinput
+%%
+%% End of file `latexalpha2.sty'.
