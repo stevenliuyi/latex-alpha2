@@ -1,5 +1,7 @@
 ## LaTeX-α<sup>2</sup>
 
+![CTAN](https://img.shields.io/ctan/v/latexalpha2.svg)
+
 LaTeX-α<sup>2</sup> is a LaTeX package that can execute Wolfram Language codes and show the corresponding results inside LaTeX documents.
 
 The package is heavily inspired by [LaTeX-Alpha](https://github.com/Akollek/LaTeX-Alpha). Unfortunately, LaTeX-Alpha has been down for a while. The aim of this package is to replace LaTeX-Alpha, as well as to provide various new features.
@@ -19,6 +21,8 @@ curl -O https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexa
 - Add `\usepackage{latexalpha2}` to the preamble of your document. All the codes will be run locally by default. If you'd like to run on the cloud, use `\usepackage[cloud]{latexalpha2}` instead.
 
 - LaTeX must be invoked with the `-shell-escape` flag in order to run WolframScript. For example: ```pdflatex -shell-escape example.tex```.
+
+Please refer to the [documentation](https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexalpha2.pdf) for more information.
 
 ### Examples
 #### `\wolfram{}`
