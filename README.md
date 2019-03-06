@@ -12,7 +12,7 @@ The package only supports Unix-like system for now. Pull requests are welcome.
 
 ### Usage
 
-- First install [WolframScript](https://www.wolfram.com/wolframscript/) or [Mathics](http://mathics.github.io) if you haven't already done so. You can use `type wolframscript` or `type mathics` to check if it's properly installed.
+- First install [WolframScript](https://www.wolfram.com/wolframscript/) (or [Mathics](http://mathics.github.io)) if you haven't already done so. You can use `type wolframscript` or `type mathics` to check if it's properly installed.
 
 - Download `latexalpha2.sty` to the same folder as your `.tex` file:
 
@@ -22,7 +22,7 @@ curl -O https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexa
 
 - Add `\usepackage{latexalpha2}` to the preamble of your document. All the codes will be run locally by default. If you'd like to run on the cloud, use `\usepackage[cloud]{latexalpha2}` instead. For the Mathics mode, use `\usepackage[mathics]{latexalpha2}`.
 
-- LaTeX must be invoked with the `-shell-escape` flag in order to run WolframScript. For example: ```pdflatex -shell-escape example.tex```.
+- LaTeX must be invoked with the `-shell-escape` flag in order to run WolframScript (or Mathics). For example: ```pdflatex -shell-escape example.tex```.
 
 Please refer to the [documentation](https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexalpha2.pdf) for more information.
 

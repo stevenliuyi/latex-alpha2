@@ -73,18 +73,18 @@
 %
 % \section{Installation}
 %
-% The Wolfram Language codes are executed using the WolframScript interpreter\footnote{\url{https://www.wolfram.com/wolframscript}}. So please make sure that WolframScript is appropriately installed before using \textsf{latexalpha2}. If you'd like to run your codes on cloud, please authenticate first:
+% The Wolfram Language codes are executed using the WolframScript interpreter\footnote{\url{https://www.wolfram.com/wolframscript}}. So please make sure that WolframScript is properly installed before using \textsf{latexalpha2}. If you'd like to run your codes on cloud, please authenticate first:
 %
 % \begin{verbatim}
 %   wolframscript -authenticate
 % \end{verbatim}
 %
-% Alternatively, if you are using Mathics for computations, please make sure that Mathics is appropriatedly installed. Please refer to the Mathics installation guide\footnote{\url{https://github.com/mathics/Mathics/wiki/Installing}} for more information.
+% Alternatively, if you are using Mathics for computations, please make sure that Mathics is properly installed. Please refer to the Mathics installation guide\footnote{\url{https://github.com/mathics/Mathics/wiki/Installing}} for more information.
 %
 % When compiling your document, \LaTeX~must be invoked with the \texttt{-shell-escape} flag in order to run either WolframScript or Mathics. Currently, this package is only tested with pdf\LaTeX~and~\XeLaTeX. After putting \texttt{\backslash usepackage\string{latexalpha2\string}} in the preamable of your document, you can compile the file as:
 %
 % \begin{verbatim}
-%   pdflatex -shell-escape filename.tex
+%   pdflatex -shell-escape mydocument.tex
 % \end{verbatim}
 %
 % \section{Usage}
@@ -96,7 +96,7 @@
 %
 % The second pair of options is \texttt{cache} (default) and \texttt{nocache}, which controls whether or not the computation results are cached. Cached results will not be computed again when you compile the document next time if the corresponding Wolfram Language code and output format are not changed.
 %
-% There is also an option \texttt{mathics}, which tells the package to use Mathics (a free, open-source alternative to Mathematica) for computations. The \texttt{mathics} mode only supports \texttt{\backslash wolfram}, \texttt{\backslash wolframgraphics}, \texttt{\backslash wolframsolve} and \texttt{\backslash wolframdsolve}.
+% There is also an option \texttt{mathics}, which tells the package to use Mathics (a free, open-source alternative to Mathematica) for computations. The \texttt{mathics} mode only supports \texttt{\backslash wolfram}, \texttt{\backslash wolframgraphics}, \texttt{\backslash wolframsolve} and \texttt{\backslash wolframdsolve}. Please note that functions may behave differently in Mathics and Mathematica, and not all Mathematica built-in functions are implemented in Mathics.
 % 
 % \subsection{Macros}
 %
@@ -138,9 +138,9 @@
 %
 % Note that you need to process the \texttt{.asy} files so they can be included in the next compilation. For example,
 % \begin{verbatim}
-%   pdflatex -shell-escape mydoc.tex
-%   asy mydoc-*.asy
-%   pdflatex -shell-escape mydoc.tex
+%   pdflatex -shell-escape mydocument.tex
+%   asy mydocument-*.asy
+%   pdflatex -shell-escape mydocument.tex
 % \end{verbatim}
 %
 % Please refer to the documentation of the \texttt{asymptote} package for more information.
@@ -179,12 +179,19 @@
 % \end{verbatim}
 % is
 % $$ \wolframtex{\int_a^b\sin(x)\,dx}. $$
+% \vspace{15pt}
 %
 % \DescribeMacro{\wolframanimation}
 % \fbox{\texttt{\backslash wolframanimation}\marg{code}\marg{foldername}} is similar to \texttt{\backslash wolframgraphics}, but it converts any Wolfram Language animation object into a sequence of images, instead of a single image. The images are saved in a subfolder of current folder, named as $\langle\textit{foldername}\rangle$. You can then use \texttt{\backslash animategraphics} from the \texttt{animate} package\footnote{\url{https://ctan.org/pkg/animate}} to generate animation. Note that PDF files with animations can only be viewed in a small number of PDF readers, which includes Acrobat Reader. Please refer to the documentation for the \texttt{animate} package for more information.
 %
 % \subsection{Notes}
-% If you want to input backslashs in your Wolfram Language codes, you could use \texttt{\backslash backslash}. For example, use \texttt{\backslash backslash[Alpha]} instead of \texttt{\backslash [Alpha]} to represent the Greek letter $\alpha$.
+% \begin{enumerate}
+%   \item If you want to input backslashs in your Wolfram Language codes, you could use \texttt{\backslash backslash}. For example, use \texttt{\backslash backslash[Alpha]} instead of \texttt{\backslash [Alpha]} to represent the Greek letter $\alpha$.
+%   \item Outputs are cached in hidden files named as $\texttt{.latexalpha2\char`\_}\langle hash\rangle\texttt{.out}$, unless the option \texttt{nocache} is specified. You can clean the cached outputs manually using the following command if you like:
+%     \begin{verbatim}
+%       rm .latexalpha2_*.out
+%     \end{verbatim}
+% \end{enumerate}
 %
 % \section{Acknowledgement}
 %
