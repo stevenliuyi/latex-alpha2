@@ -2,15 +2,17 @@
 
 [![CTAN](https://img.shields.io/ctan/v/latexalpha2.svg)](https://ctan.org/pkg/latexalpha2)
 
-LaTeX-α<sup>2</sup> is a LaTeX package that can execute Wolfram Language codes and show the corresponding results inside LaTeX documents.
+LaTeX-α<sup>2</sup> (`latexalpha2`) is a LaTeX package that can execute Wolfram Language codes and show the corresponding results inside LaTeX documents.
 
 The package is heavily inspired by [LaTeX-Alpha](https://github.com/Akollek/LaTeX-Alpha). Unfortunately, LaTeX-Alpha has been down for a while. The aim of this package is to replace LaTeX-Alpha, as well as to provide various new features.
 
-The codes can be executed either locally (via locally installed Mathematica) or on the cloud (via [Wolfram Cloud](https://www.wolframcloud.com/)) using the [WolframScript](https://www.wolfram.com/wolframscript/) interpreter.
+The codes can be executed either locally (via locally installed Mathematica) or on the cloud (via [Wolfram Cloud](https://www.wolframcloud.com/)) using the [WolframScript](https://www.wolfram.com/wolframscript/) interpreter. In addition, you can also use [Mathics](http://mathics.github.io) (a free, open-source alternative to Mathematica) for computations.
+
+The package only supports Unix-like system for now. Pull requests are welcome.
 
 ### Usage
 
-- First install [WolframScript](https://www.wolfram.com/wolframscript/) if you haven't already done so. You can use `type wolframscript` to check if it's properly installed.
+- First install [WolframScript](https://www.wolfram.com/wolframscript/) or [Mathics](http://mathics.github.io) if you haven't already done so. You can use `type wolframscript` or `type mathics` to check if it's properly installed.
 
 - Download `latexalpha2.sty` to the same folder as your `.tex` file:
 
@@ -18,7 +20,7 @@ The codes can be executed either locally (via locally installed Mathematica) or 
 curl -O https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexalpha2.sty
 ```
 
-- Add `\usepackage{latexalpha2}` to the preamble of your document. All the codes will be run locally by default. If you'd like to run on the cloud, use `\usepackage[cloud]{latexalpha2}` instead.
+- Add `\usepackage{latexalpha2}` to the preamble of your document. All the codes will be run locally by default. If you'd like to run on the cloud, use `\usepackage[cloud]{latexalpha2}` instead. For the Mathics mode, use `\usepackage[mathics]{latexalpha2}`.
 
 - LaTeX must be invoked with the `-shell-escape` flag in order to run WolframScript. For example: ```pdflatex -shell-escape example.tex```.
 
