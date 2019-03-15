@@ -186,7 +186,7 @@
 %
 % \subsection{Notes}
 % \begin{enumerate}
-%   \item If you want to input backslashs in your Wolfram Language codes, you could use \texttt{\backslash backslash}. For example, use \texttt{\backslash backslash[Alpha]} instead of \texttt{\backslash [Alpha]} to represent the Greek letter $\alpha$.
+%   \item If you want to input backslashs (\texttt{\backslash}) or number signs (\texttt{\hash}) in your Wolfram Language codes, you could use \texttt{\backslash backslash} and \texttt{\backslash hash}, respectively. For example, use \texttt{\backslash backslash[Alpha]} instead of \texttt{\backslash [Alpha]} to represent the Greek letter $\alpha$.
 %   \item Outputs are cached in hidden files named as $\texttt{.latexalpha2\char`\_}\langle hash\rangle\texttt{.out}$, unless the option \texttt{nocache} is specified. You can clean the cached outputs manually using the following command if you like:
 %     \begin{verbatim}
 %       rm .latexalpha2_*.out
@@ -229,6 +229,7 @@
   \gdef\@hashchar{#}
   \gdef\@ampchar{&}
   \gdef\backslash{\@backslashchar}
+  \gdef\hash{\@hashchar}
   \makeatother
 \endgroup
 
