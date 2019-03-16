@@ -54,7 +54,7 @@ Input:
 
 Output:
 
-![Example Plot](example.png?raw=true)
+![Example Plot](images/example.png?raw=true)
 
 Input:
 
@@ -69,7 +69,7 @@ Input:
 
 Output:
 
-![Example Plot 2](example2.png?raw=true)
+![Example Plot 2](images/example2.png?raw=true)
 
 #### `\wolframalpha{}`
 
@@ -101,6 +101,22 @@ Input:
 Output:
 
 ![](http://latex.codecogs.com/gif.latex?y(x)=\frac{1}{2}a(\sin(x)-\cos(x))+c_1e^{-x})
+
+
+#### `\wolframtable{}`
+
+Input:
+```tex
+\begin{tabular}{ccc}
+    \hline
+    \wolframtable{Join[{{x,x^2,x^3}}, Table[{i,i^2,i^3},{i,5}]]}
+    \hline
+\end{tabular}
+```
+
+Output:
+
+![Example Plot 3](images/example3.png?raw=true)
 
 ### License
 

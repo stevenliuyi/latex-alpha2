@@ -61,9 +61,9 @@
 \newcommand{\la@unknownoption}[2]{\PackageError{latexalpha2}{Unknown option '#2' for \@backslashchar #1}{}}
 
 \newcommand{\la@executewolfram}[1]{%
-  \IfFileExists{\la@resulttempfile}{
-    \ifbool{ifcache}{\message{found cached output file \la@resulttempfile^^J}}{\la@executewolframcore{#1}}
-  }{\la@executewolframcore{#1}}
+  \IfFileExists{\la@resulttempfile}{%
+    \ifbool{ifcache}{\message{found cached output file \la@resulttempfile^^J}}{\la@executewolframcore{#1}}%
+  }{\la@executewolframcore{#1}}%
 }
 
 \newcommand{\la@executewolframcore}[1]{%
@@ -71,7 +71,7 @@
     \def\la@wolframscript{wolframscript -file \la@codetempfile\space -print \ifblank{#1}{}{-format #1} \la@platform\space> \la@resulttempfile}%
   }{%
     \def\la@wolframscript{mathics \la@codetempfile\space> \la@resulttempfile}%
-  }
+  }%
   \message{command: \la@wolframscript^^J}%
   \immediate\write18{\la@wolframscript}%
 }
@@ -79,7 +79,7 @@
 \newcommand{\la@writecodefile}[2]{%
   \message{------------ latexalpha2 -------------^^J}%
   \message{\notbool{ifmathics}{wolfram}{mathics} code: #1^^J}%
-  \ifblank{#2}{}{\message{option: #2}}
+  \ifblank{#2}{}{\message{option: #2}}%
   \gdef\la@currcodehash{\ifxetex\mdfivesum{#1#2}\else\pdfmdfivesum{#1#2}\fi}%
   \gdef\la@resulttempfile{.latexalpha2_\la@currcodehash.out}%
   \newwrite\tempfile%
@@ -89,7 +89,7 @@
 }
 
 \newcommand{\la@notformathics}[1]{%
-  \ifbool{ifmathics}{\PackageError{latexalpha2}{\@backslashchar #1 is not available for the Mathics mode}{}}{}
+  \ifbool{ifmathics}{\PackageError{latexalpha2}{\@backslashchar #1 is not available for the Mathics mode}{}}{}%
 }
 
 \def\la@texformat{tex}
@@ -214,6 +214,16 @@
   \immediate\write18{mkdir -p #2}%
   \immediate\write18{convert -coalesce #2.gif #2/frame.png}%
   \la@cleancodetempfile%
+}
+
+\newcommand{\wolframtable}[1]{%
+  \la@notformathics{wolframtable}%
+  \la@cleancodetempfile%
+  \def\la@tablecode{StringJoin@@((StringRiffle[("$"<>Slot[1]<>"$")\@ampchar/@ToString/@TeXForm/@(Slot[1]),"\space\@ampchar\space"]<>"\@backslashchar\@backslashchar\@backslashchar\@backslashchar")\@ampchar/@(#1))}%
+  \la@writecodefile{\la@tablecode}{}%
+  \la@executewolfram{Text}%
+  \la@cleancodetempfile%
+  \input{\la@resulttempfile}%
 }
 
 \AtBeginDocument{%
