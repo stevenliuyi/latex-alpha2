@@ -21,6 +21,8 @@ The package only supports Unix-like system for now. Pull requests are welcome.
 curl -O https://raw.githubusercontent.com/stevenliuyi/latex-alpha2/master/latexalpha2.sty
 ```
 
+To avoid copying the file every time, please see the [installation guide](#installation) below.
+
 - Add `\usepackage{latexalpha2}` to the preamble of your document. All the codes will be run locally by default. If you'd like to run on the cloud, use `\usepackage[cloud]{latexalpha2}` instead. For the Mathics mode, use `\usepackage[mathics]{latexalpha2}`.
 
 - LaTeX must be invoked with the `-shell-escape` flag in order to run WolframScript (or Mathics). For example: ```pdflatex -shell-escape example.tex```.
@@ -117,6 +119,11 @@ Input:
 Output:
 
 ![Example Plot 3](images/example3.png?raw=true)
+
+
+### Installation
+
+To avoid copying the `latexalpha2.sty` file for every new project, you could install the package instead. Just put the `.sty` file in the `texmf/tex/latex` folder (for TeX Live, it would be `/usr/local/texlive/texmf-local/tex/latex` by default), and then run `sudo hexhash` to update the package database. For more information, please refer to [LaTeX/Installing Extra Packages](https://en.wikibooks.org/wiki/LaTeX/Installing_Extra_Packages).
 
 ### License
 
