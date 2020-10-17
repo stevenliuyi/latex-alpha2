@@ -123,7 +123,7 @@ Output:
 
 ### Installation
 
-To avoid copying the `latexalpha2.sty` file for every new project, you could install the package instead. Just put the `.sty` file in the `texmf/tex/latex` folder (for TeX Live, it would be `/usr/local/texlive/texmf-local/tex/latex` by default), and then run `sudo hexhash` to update the package database. For more information, please refer to [LaTeX/Installing Extra Packages](https://en.wikibooks.org/wiki/LaTeX/Installing_Extra_Packages).
+To avoid copying the `latexalpha2.sty` file for every new project, you could install the package instead. Just put the `.sty` file in the `texmf/tex/latex` folder (for TeX Live, it would be `/usr/local/texlive/texmf-local/tex/latex` by default), and then run `sudo texhash` to update the package database. For more information, please refer to [LaTeX/Installing Extra Packages](https://en.wikibooks.org/wiki/LaTeX/Installing_Extra_Packages).
 
 ### License
 
